@@ -21,6 +21,17 @@ RCT_EXPORT_METHOD(shouldStartLoadWithLockIdentifier:(BOOL)shouldStart lockIdenti
     [[RNCWebViewDecisionManager getInstance] setResult:shouldStart forLockIdentifier:(int)lockIdentifier];
 }
 
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getCustomCertificateKeychainAlias)
+{
+  return nil;
+}
+
+RCT_EXPORT_METHOD(setCustomCertificateKeychainAlias:(NSString * _Nullable)alias)
+{
+  
+}
+
+
 #ifdef RCT_NEW_ARCH_ENABLED
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:(const facebook::react::ObjCTurboModule::InitParams &)params {
   return std::make_shared<facebook::react::NativeRNCWebViewModuleSpecJSI>(params);
