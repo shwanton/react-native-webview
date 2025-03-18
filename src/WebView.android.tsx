@@ -276,6 +276,8 @@ const WebView = forwardRef<{}, AndroidWebViewProps>(
           )
         : sourceResolved;
 
+    const alias = WebViewModule.getCustomCertificateKeychainAlias();
+
     const webView = (
       <NativeWebView
         key="webViewKey"
@@ -313,6 +315,7 @@ const WebView = forwardRef<{}, AndroidWebViewProps>(
         setDisplayZoomControls={setDisplayZoomControls}
         nestedScrollEnabled={nestedScrollEnabled}
         injectedJavaScriptObject={JSON.stringify(injectedJavaScriptObject)}
+        customCertificateKeychainAlias={alias}
         {...nativeConfig?.props}
       />
     );
