@@ -1,11 +1,15 @@
 package com.reactnativecommunity.webview;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.SystemClock;
+import android.security.KeyChain;
+import android.security.KeyChainException;
 import android.util.Log;
+import android.webkit.ClientCertRequest;
 import android.webkit.HttpAuthHandler;
 import android.webkit.RenderProcessGoneDetail;
 import android.webkit.SslErrorHandler;
@@ -21,9 +25,7 @@ import androidx.core.util.Pair;
 import com.facebook.common.logging.FLog;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
-import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerHelper;
 import com.reactnativecommunity.webview.events.TopHttpErrorEvent;
 import com.reactnativecommunity.webview.events.TopLoadingErrorEvent;
@@ -34,6 +36,8 @@ import com.reactnativecommunity.webview.events.TopShouldStartLoadWithRequestEven
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
+import java.security.PrivateKey;
+import java.security.cert.X509Certificate;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class RNCWebViewClient extends WebViewClient {
@@ -44,6 +48,7 @@ public class RNCWebViewClient extends WebViewClient {
     protected RNCWebView.ProgressChangedFilter progressChangedFilter = null;
     protected @Nullable String ignoreErrFailedForThisURL = null;
     protected @Nullable RNCBasicAuthCredential basicAuthCredential = null;
+    private @Nullable String mCustomCertificateKeychainAlias = null;
 
     public void setIgnoreErrFailedForThisURL(@Nullable String url) {
         ignoreErrFailedForThisURL = url;
@@ -51,6 +56,35 @@ public class RNCWebViewClient extends WebViewClient {
 
     public void setBasicAuthCredential(@Nullable RNCBasicAuthCredential credential) {
         basicAuthCredential = credential;
+    }
+
+    public void setCustomCertificateKeychainAlias(@Nullable String alias) {
+        mCustomCertificateKeychainAlias = alias;
+    }
+
+    @Override
+    public void onReceivedClientCertRequest(WebView view, ClientCertRequest request) {
+       if (mCustomCertificateKeychainAlias == null) {
+           super.onReceivedClientCertRequest(view, request);
+           return;
+       }
+
+       new Thread(() -> {
+           try {
+               ReactContext reactContext = (ReactContext) view.getContext();
+               final Activity activity = reactContext.getCurrentActivity();
+
+               PrivateKey privateKey = KeyChain.getPrivateKey(activity, mCustomCertificateKeychainAlias);
+               X509Certificate[] certificateChain = KeyChain.getCertificateChain(activity, mCustomCertificateKeychainAlias);
+
+               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                   request.proceed(privateKey, certificateChain);
+               }
+           } catch (KeyChainException | InterruptedException e) {
+               Log.e(TAG, "Failed to enable fetch custom certificates for WebView", e);
+               throw new RuntimeException(e);
+           }
+       }).start();
     }
 
     @Override

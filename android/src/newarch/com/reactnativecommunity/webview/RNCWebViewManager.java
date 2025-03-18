@@ -25,8 +25,6 @@ import com.reactnativecommunity.webview.events.TopOpenWindowEvent;
 import com.reactnativecommunity.webview.events.TopRenderProcessGoneEvent;
 import com.reactnativecommunity.webview.events.TopShouldStartLoadWithRequestEvent;
 
-import android.webkit.WebChromeClient;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,9 +37,9 @@ public class RNCWebViewManager extends ViewGroupManager<RNCWebViewWrapper>
     private final ViewManagerDelegate<RNCWebViewWrapper> mDelegate;
     private final RNCWebViewManagerImpl mRNCWebViewManagerImpl;
 
-    public RNCWebViewManager() {
+    public RNCWebViewManager(@Nullable RNCWebViewConfig webViewConfig) {
         mDelegate = new RNCWebViewManagerDelegate<>(this);
-        mRNCWebViewManagerImpl = new RNCWebViewManagerImpl(true);
+        mRNCWebViewManagerImpl = new RNCWebViewManagerImpl(true, webViewConfig);
     }
 
     @Nullable
@@ -331,6 +329,12 @@ public class RNCWebViewManager extends ViewGroupManager<RNCWebViewWrapper>
         mRNCWebViewManagerImpl.setWebviewDebuggingEnabled(view, value);
     }
 
+    @Override
+    @ReactProp(name = "customCertificateKeychainAlias")
+    public void setCustomCertificateKeychainAlias(RNCWebViewWrapper view, @Nullable String alias) {
+        mRNCWebViewManagerImpl.setCustomCertificateKeychainAlias(view, alias);
+    }
+
     /* iOS PROPS - no implemented here */
     @Override
     public void setAllowingReadAccessToURL(RNCWebViewWrapper view, @Nullable String value) {}
@@ -426,80 +430,80 @@ public class RNCWebViewManager extends ViewGroupManager<RNCWebViewWrapper>
         mRNCWebViewManagerImpl.setUserAgent(view, value);
     }
 
-  @Override
-  public void goBack(RNCWebViewWrapper view) {
-    view.getWebView().goBack();
-  }
+    @Override
+    public void goBack(RNCWebViewWrapper view) {
+        view.getWebView().goBack();
+    }
 
-  @Override
-  public void goForward(RNCWebViewWrapper view) {
-    view.getWebView().goForward();
-  }
+    @Override
+    public void goForward(RNCWebViewWrapper view) {
+        view.getWebView().goForward();
+    }
 
-  @Override
-  public void reload(RNCWebViewWrapper view) {
-    view.getWebView().reload();
-  }
+    @Override
+    public void reload(RNCWebViewWrapper view) {
+        view.getWebView().reload();
+    }
 
-  @Override
-  public void stopLoading(RNCWebViewWrapper view) {
-    view.getWebView().stopLoading();
-  }
+    @Override
+    public void stopLoading(RNCWebViewWrapper view) {
+        view.getWebView().stopLoading();
+    }
 
-  @Override
-  public void injectJavaScript(RNCWebViewWrapper view, String javascript) {
-      view.getWebView().evaluateJavascriptWithFallback(javascript);
-  }
+    @Override
+    public void injectJavaScript(RNCWebViewWrapper view, String javascript) {
+        view.getWebView().evaluateJavascriptWithFallback(javascript);
+    }
 
-  @Override
-  public void requestFocus(RNCWebViewWrapper view) {
-      view.requestFocus();
-  }
+    @Override
+    public void requestFocus(RNCWebViewWrapper view) {
+        view.requestFocus();
+    }
 
-  @Override
-  public void postMessage(RNCWebViewWrapper view, String data) {
-      try {
-        JSONObject eventInitDict = new JSONObject();
-        eventInitDict.put("data", data);
-        view.getWebView().evaluateJavascriptWithFallback(
-          "(function () {" +
-            "var event;" +
-            "var data = " + eventInitDict.toString() + ";" +
-            "try {" +
-            "event = new MessageEvent('message', data);" +
-            "} catch (e) {" +
-            "event = document.createEvent('MessageEvent');" +
-            "event.initMessageEvent('message', true, true, data.data, data.origin, data.lastEventId, data.source);" +
-            "}" +
-            "document.dispatchEvent(event);" +
-            "})();"
-        );
-      } catch (JSONException e) {
-        throw  new RuntimeException(e);
-      }
-  }
+    @Override
+    public void postMessage(RNCWebViewWrapper view, String data) {
+        try {
+            JSONObject eventInitDict = new JSONObject();
+            eventInitDict.put("data", data);
+            view.getWebView().evaluateJavascriptWithFallback(
+                "(function () {" +
+                "var event;" +
+                "var data = " + eventInitDict.toString() + ";" +
+                "try {" +
+                "event = new MessageEvent('message', data);" +
+                "} catch (e) {" +
+                "event = document.createEvent('MessageEvent');" +
+                "event.initMessageEvent('message', true, true, data.data, data.origin, data.lastEventId, data.source);" +
+                "}" +
+                "document.dispatchEvent(event);" +
+                "})();"
+            );
+        } catch (JSONException e) {
+            throw  new RuntimeException(e);
+        }
+    }
 
-  @Override
-  public void loadUrl(RNCWebViewWrapper view, String url) {
-      view.getWebView().loadUrl(url);
-  }
+    @Override
+    public void loadUrl(RNCWebViewWrapper view, String url) {
+        view.getWebView().loadUrl(url);
+    }
 
-  @Override
-  public void clearFormData(RNCWebViewWrapper view) {
-      view.getWebView().clearFormData();
-  }
+    @Override
+    public void clearFormData(RNCWebViewWrapper view) {
+        view.getWebView().clearFormData();
+    }
 
-  @Override
-  public void clearCache(RNCWebViewWrapper view, boolean includeDiskFiles) {
-      view.getWebView().clearCache(includeDiskFiles);
-  }
+    @Override
+    public void clearCache(RNCWebViewWrapper view, boolean includeDiskFiles) {
+        view.getWebView().clearCache(includeDiskFiles);
+    }
 
-  @Override
-  public void clearHistory(RNCWebViewWrapper view) {
-      view.getWebView().clearHistory();
-  }
+    @Override
+    public void clearHistory(RNCWebViewWrapper view) {
+        view.getWebView().clearHistory();
+    }
 
-  @Override
+    @Override
     protected void addEventEmitters(@NonNull ThemedReactContext reactContext, RNCWebViewWrapper view) {
         // Do not register default touch emitter and let WebView implementation handle touches
         view.getWebView().setWebViewClient(new RNCWebViewClient());
@@ -549,5 +553,10 @@ public class RNCWebViewManager extends ViewGroupManager<RNCWebViewWrapper>
     public void onDropViewInstance(@NonNull RNCWebViewWrapper view) {
         mRNCWebViewManagerImpl.onDropViewInstance(view);
         super.onDropViewInstance(view);
+    }
+
+    @Override
+    public void removeAllViews(@NonNull RNCWebViewWrapper parent) {
+        super.removeAllViews(parent);
     }
 }

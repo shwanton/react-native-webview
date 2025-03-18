@@ -31,13 +31,16 @@ import java.util.Locale
 
 val invalidCharRegex = "[\\\\/%\"]".toRegex()
 
-class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+class RNCWebViewManagerImpl(
+    private val newArch: Boolean = false,
+    private val webViewConfig: RNCWebViewConfig? = null,
+) {
     companion object {
         const val NAME = "RNCWebView"
     }
 
     private val TAG = "RNCWebViewManagerImpl"
-    private var mWebViewConfig: RNCWebViewConfig = RNCWebViewConfig { webView: WebView? -> }
+    private var mWebViewConfig: RNCWebViewConfig = webViewConfig ?: RNCWebViewConfig { webView: WebView? -> }
     private var mAllowsFullscreenVideo = false
     private var mAllowsProtectedMedia = false
     private var mDownloadingMessage: String? = null
@@ -714,5 +717,9 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
 
     fun setWebviewDebuggingEnabled(viewWrapper: RNCWebViewWrapper, enabled: Boolean) {
         RNCWebView.setWebContentsDebuggingEnabled(enabled)
+    }
+
+    fun setCustomCertificateKeychainAlias(viewWrapper: RNCWebViewWrapper, alias: String?) {
+        viewWrapper.webView.setCustomCertificateKeychainAlias(alias)
     }
 }

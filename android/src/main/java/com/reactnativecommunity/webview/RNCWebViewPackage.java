@@ -15,11 +15,16 @@ import java.util.List;
 import java.util.Map;
 
 public class RNCWebViewPackage extends TurboReactPackage {
+    @Nullable private RNCWebViewConfig mWebViewConfig = null;
+
+    public void setWebViewConfig(@Nullable RNCWebViewConfig webViewConfig) {
+        mWebViewConfig = webViewConfig;
+    }
 
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
         List<ViewManager> viewManagers = new ArrayList<>();
-        viewManagers.add(new RNCWebViewManager());
+        viewManagers.add(new RNCWebViewManager(mWebViewConfig));
         return viewManagers;
     }
 

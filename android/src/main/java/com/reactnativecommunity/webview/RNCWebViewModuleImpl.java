@@ -12,8 +12,8 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.util.Pair;
@@ -24,13 +24,8 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.widget.Toast;
 
-import com.facebook.common.activitylistener.ActivityListenerManager;
 import com.facebook.react.bridge.ActivityEventListener;
-import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContextBaseJavaModule;
-import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.modules.core.PermissionAwareActivity;
 import com.facebook.react.modules.core.PermissionListener;
 
@@ -59,6 +54,8 @@ public class RNCWebViewModuleImpl implements ActivityEventListener {
     private ValueCallback<Uri[]> mFilePathCallback;
     private File mOutputImage;
     private File mOutputVideo;
+
+    private String mCustomCertificateKeychainAlias = null;
 
     public RNCWebViewModuleImpl(ReactApplicationContext context) {
         mContext = context;
@@ -130,9 +127,7 @@ public class RNCWebViewModuleImpl implements ActivityEventListener {
     }
 
     @Override
-    public void onNewIntent(Intent intent) {
-
-    }
+    public void onNewIntent(Intent intent) {}
 
     protected static class ShouldOverrideUrlLoadingLock {
         protected enum ShouldOverrideCallbackState {
@@ -211,6 +206,14 @@ public class RNCWebViewModuleImpl implements ActivityEventListener {
         }
     }
 
+    public @Nullable String getCustomCertificateKeychainAlias() {
+        return mCustomCertificateKeychainAlias;
+    }
+
+    public void setCustomCertificateKeychainAlias(String alias) {
+        mCustomCertificateKeychainAlias = alias;
+    }
+    
     public Uri[] getSelectedFiles(Intent data, int resultCode) {
         if (data == null) {
             return null;

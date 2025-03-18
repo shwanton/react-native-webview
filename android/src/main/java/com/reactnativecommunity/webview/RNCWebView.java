@@ -24,12 +24,9 @@ import androidx.webkit.WebViewFeature;
 
 import com.facebook.common.logging.FLog;
 import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.CatalystInstance;
-import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerHelper;
@@ -97,6 +94,10 @@ public class RNCWebView extends WebView implements LifecycleEventListener {
 
     public void setBasicAuthCredential(RNCBasicAuthCredential credential) {
         mRNCWebViewClient.setBasicAuthCredential(credential);
+    }
+
+    public void setCustomCertificateKeychainAlias(@Nullable String alias) {
+       mRNCWebViewClient.setCustomCertificateKeychainAlias(alias);
     }
 
     public void setSendContentSizeChangeEvents(boolean sendContentSizeChangeEvents) {

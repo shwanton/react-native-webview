@@ -6,6 +6,7 @@ import android.webkit.ValueCallback;
 
 import androidx.annotation.NonNull;
 
+import androidx.annotation.Nullable;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.module.annotations.ReactModule;
@@ -27,6 +28,17 @@ public class RNCWebViewModule extends NativeRNCWebViewModuleSpec {
     @Override
     public void shouldStartLoadWithLockIdentifier(boolean shouldStart, double lockIdentifier) {
         mRNCWebViewModuleImpl.shouldStartLoadWithLockIdentifier(shouldStart, lockIdentifier);
+    }
+
+    @Override
+    @Nullable
+    public String getCustomCertificateKeychainAlias() {
+        return mRNCWebViewModuleImpl.getCustomCertificateKeychainAlias();
+    }
+
+    @Override
+    public void setCustomCertificateKeychainAlias(String alias) {
+        mRNCWebViewModuleImpl.setCustomCertificateKeychainAlias(alias);
     }
 
     public void startPhotoPickerIntent(ValueCallback<Uri> filePathCallback, String acceptType) {
