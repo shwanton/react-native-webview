@@ -176,6 +176,7 @@ export interface NativeProps extends ViewProps {
   thirdPartyCookiesEnabled?: WithDefault<boolean, true>;
   // Workaround to watch if listener if defined
   hasOnScroll?: boolean;
+  customCertificateKeychainAlias?: string | null;
   // !Android only
 
   // iOS only
