@@ -1,4 +1,6 @@
-// This "dummy" WebViewModule is for unsupported platforms,
-const WebViewModule = {}
+import type NativeRNCWebViewModule from './NativeRNCWebViewModule';
 
-export default WebViewModule
+// This "dummy" WebViewModule is for unsupported platforms,
+const WebViewModule = {} as typeof NativeRNCWebViewModule;
+
+export default WebViewModule;

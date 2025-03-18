@@ -8,7 +8,7 @@ import { Image, View, ImageSourcePropType, HostComponent } from 'react-native';
 import invariant from 'invariant';
 
 import RNCWebView, { Commands, NativeProps } from './RNCWebViewNativeComponent';
-import WebViewModule from './WebViewModule.ios';
+import WebViewModule from './WebViewModule';
 
 import {
   defaultOriginWhitelist,

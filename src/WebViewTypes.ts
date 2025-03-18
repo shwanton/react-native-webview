@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import type NativeWebViewComponent from './RNCWebViewNativeComponent';
+import type NativeRNCWebViewModule from './NativeRNCWebViewModule';
 
 type WebViewCommands =
   | 'goForward'
