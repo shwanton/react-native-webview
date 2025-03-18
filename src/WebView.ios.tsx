@@ -8,7 +8,7 @@ import { Image, View, ImageSourcePropType, HostComponent } from 'react-native';
 import invariant from 'invariant';
 
 import RNCWebView, { Commands, NativeProps } from './RNCWebViewNativeComponent';
-import RNCWebViewModule from './NativeRNCWebViewModule';
+import WebViewModule from './WebViewModule.ios';
 
 import {
   defaultOriginWhitelist,
@@ -47,7 +47,7 @@ const useWarnIfChanges = <T extends unknown>(value: T, name: string) => {
   }
 };
 
-const WebViewComponent = forwardRef<{}, IOSWebViewProps>(
+const WebView = forwardRef<{}, IOSWebViewProps>(
   (
     {
       fraudulentWebsiteWarningEnabled = true,
@@ -97,7 +97,7 @@ const WebViewComponent = forwardRef<{}, IOSWebViewProps>(
 
     const onShouldStartLoadWithRequestCallback = useCallback(
       (shouldStart: boolean, _url: string, lockIdentifier = 0) => {
-        RNCWebViewModule.shouldStartLoadWithLockIdentifier(
+        WebViewModule.shouldStartLoadWithLockIdentifier(
           shouldStart,
           lockIdentifier
         );
@@ -290,10 +290,5 @@ const WebViewComponent = forwardRef<{}, IOSWebViewProps>(
     );
   }
 );
-
-// no native implementation for iOS, depends only on permissions
-const isFileUploadSupported: () => Promise<boolean> = async () => true;
-
-const WebView = Object.assign(WebViewComponent, { isFileUploadSupported });
 
 export default WebView;

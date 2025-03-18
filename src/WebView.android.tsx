@@ -15,7 +15,7 @@ import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter';
 import invariant from 'invariant';
 
 import RNCWebView, { Commands, NativeProps } from './RNCWebViewNativeComponent';
-import RNCWebViewModule from './NativeRNCWebViewModule';
+import WebViewModule from './WebViewModule.android';
 import {
   defaultOriginWhitelist,
   defaultRenderError,
@@ -60,7 +60,7 @@ registerCallableModule('RNCWebViewMessagingModule', {
  */
 let uniqueRef = 0;
 
-const WebViewComponent = forwardRef<{}, AndroidWebViewProps>(
+const WebView = forwardRef<{}, AndroidWebViewProps>(
   (
     {
       overScrollMode = 'always',
@@ -110,7 +110,7 @@ const WebViewComponent = forwardRef<{}, AndroidWebViewProps>(
     const onShouldStartLoadWithRequestCallback = useCallback(
       (shouldStart: boolean, url: string, lockIdentifier?: number) => {
         if (lockIdentifier) {
-          RNCWebViewModule.shouldStartLoadWithLockIdentifier(
+          WebViewModule.shouldStartLoadWithLockIdentifier(
             shouldStart,
             lockIdentifier
           );
@@ -325,10 +325,5 @@ const WebViewComponent = forwardRef<{}, AndroidWebViewProps>(
     );
   }
 );
-
-// native implementation should return "true" only for Android 5+
-const { isFileUploadSupported } = RNCWebViewModule;
-
-const WebView = Object.assign(WebViewComponent, { isFileUploadSupported });
 
 export default WebView;
