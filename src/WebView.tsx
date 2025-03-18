@@ -4,11 +4,13 @@ import {
   IOSWebViewProps,
   AndroidWebViewProps,
   WindowsWebViewProps,
+  MacOSWebViewProps,
 } from './WebViewTypes';
 import styles from './WebView.styles';
 
 export type WebViewProps = IOSWebViewProps &
   AndroidWebViewProps &
+  MacOSWebViewProps &
   WindowsWebViewProps;
 
 // This "dummy" WebView is to render something for unsupported platforms,
