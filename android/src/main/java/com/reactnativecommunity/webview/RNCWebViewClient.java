@@ -79,6 +79,9 @@ public class RNCWebViewClient extends WebViewClient {
 
                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                    request.proceed(privateKey, certificateChain);
+               } else {
+                   Log.e(TAG, "Custom certificates are not supported on Android versions below 21");
+                   request.cancel();
                }
            } catch (KeyChainException | InterruptedException e) {
                Log.e(TAG, "Failed to enable fetch custom certificates for WebView", e);
