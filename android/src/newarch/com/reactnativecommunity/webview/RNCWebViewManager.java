@@ -1,5 +1,7 @@
 package com.reactnativecommunity.webview;
 
+import android.webkit.WebView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -37,9 +39,13 @@ public class RNCWebViewManager extends ViewGroupManager<RNCWebViewWrapper>
     private final ViewManagerDelegate<RNCWebViewWrapper> mDelegate;
     private final RNCWebViewManagerImpl mRNCWebViewManagerImpl;
 
+    public RNCWebViewManager() {
+        this(null);
+    }
+
     public RNCWebViewManager(@Nullable RNCWebViewConfig webViewConfig) {
-        mDelegate = new RNCWebViewManagerDelegate<>(this);
         mRNCWebViewManagerImpl = new RNCWebViewManagerImpl(true, webViewConfig);
+        mDelegate = new RNCWebViewManagerDelegate<>(this);
     }
 
     @Nullable

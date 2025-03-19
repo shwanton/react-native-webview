@@ -33,14 +33,14 @@ val invalidCharRegex = "[\\\\/%\"]".toRegex()
 
 class RNCWebViewManagerImpl(
     private val newArch: Boolean = false,
-    private val webViewConfig: RNCWebViewConfig? = null,
+    webViewConfig: RNCWebViewConfig? = null,
 ) {
     companion object {
         const val NAME = "RNCWebView"
     }
 
     private val TAG = "RNCWebViewManagerImpl"
-    private var mWebViewConfig: RNCWebViewConfig = webViewConfig ?: RNCWebViewConfig { webView: WebView? -> }
+    private var mWebViewConfig: RNCWebViewConfig = webViewConfig ?: RNCWebViewConfig { }
     private var mAllowsFullscreenVideo = false
     private var mAllowsProtectedMedia = false
     private var mDownloadingMessage: String? = null
