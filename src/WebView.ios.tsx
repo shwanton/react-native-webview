@@ -156,9 +156,15 @@ const WebView = forwardRef<{}, IOSWebViewProps>(
           Commands.injectJavaScript(webViewRef.current, data),
         requestFocus: () =>
           webViewRef.current && Commands.requestFocus(webViewRef.current),
-        clearCache: (includeDiskFiles: boolean) =>
-          webViewRef.current &&
-          Commands.clearCache(webViewRef.current, includeDiskFiles),
+        clearCache: () => {
+          console.error("Command clearCache not supported on this platform")
+        },
+        clearFormData: () => {
+          console.error("Command clearFormData not supported on this platform")
+        },
+        clearHistory: () => {
+          console.error("Command clearHistory not supported on this platform")
+        }
       }),
       [setViewState, webViewRef]
     );
