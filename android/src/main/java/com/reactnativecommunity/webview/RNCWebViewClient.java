@@ -39,6 +39,8 @@ import android.webkit.CookieSyncManager;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class RNCWebViewClient extends WebViewClient {
     private static String TAG = "RNCWebViewClient";
@@ -49,6 +51,7 @@ public class RNCWebViewClient extends WebViewClient {
     protected @Nullable String ignoreErrFailedForThisURL = null;
     protected @Nullable RNCBasicAuthCredential basicAuthCredential = null;
     private @Nullable String mCustomCertificateKeychainAlias = null;
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     public void setIgnoreErrFailedForThisURL(@Nullable String url) {
         ignoreErrFailedForThisURL = url;
@@ -64,30 +67,28 @@ public class RNCWebViewClient extends WebViewClient {
 
     @Override
     public void onReceivedClientCertRequest(WebView view, ClientCertRequest request) {
-       if (mCustomCertificateKeychainAlias == null) {
-           super.onReceivedClientCertRequest(view, request);
-           return;
-       }
+        if (mCustomCertificateKeychainAlias == null) {
+            super.onReceivedClientCertRequest(view, request);
+            return;
+        }
 
-       new Thread(() -> {
-           try {
-               ReactContext reactContext = (ReactContext) view.getContext();
-               final Activity activity = reactContext.getCurrentActivity();
-
-               PrivateKey privateKey = KeyChain.getPrivateKey(activity, mCustomCertificateKeychainAlias);
-               X509Certificate[] certificateChain = KeyChain.getCertificateChain(activity, mCustomCertificateKeychainAlias);
-
-               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                   request.proceed(privateKey, certificateChain);
-               } else {
-                   Log.e(TAG, "Custom certificates are not supported on Android versions below 21");
-                   request.cancel();
-               }
-           } catch (KeyChainException | InterruptedException e) {
-               Log.e(TAG, "Failed to enable fetch custom certificates for WebView", e);
-               throw new RuntimeException(e);
-           }
-       }).start();
+        executorService.execute(() -> {
+            try {
+                ReactContext reactContext = (ReactContext) view.getContext();
+                final Activity activity = reactContext.getCurrentActivity();
+                PrivateKey privateKey = KeyChain.getPrivateKey(activity, mCustomCertificateKeychainAlias);
+                X509Certificate[] certificateChain = KeyChain.getCertificateChain(activity, mCustomCertificateKeychainAlias);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    request.proceed(privateKey, certificateChain);
+                } else {
+                    Log.e(TAG, "Custom certificates are not supported on Android versions below 21");
+                    request.cancel();
+                }
+            } catch (KeyChainException | InterruptedException e) {
+                Log.e(TAG, "Failed to enable fetch custom certificates for WebView", e);
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @Override
