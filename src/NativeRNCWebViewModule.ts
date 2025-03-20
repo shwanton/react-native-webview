@@ -9,8 +9,8 @@ export interface Spec extends TurboModule {
   ): void;
   // Android only
   isFileUploadSupported(): Promise<boolean>;
-  getCustomCertificateKeychainAlias(): string | null;
-  setCustomCertificateKeychainAlias(alias: string | null): void
+  getCustomCertificateKeychainAlias?(): string | null;
+  setCustomCertificateKeychainAlias?(alias: string | null): void;
   // !Android only
 }
 

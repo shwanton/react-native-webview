@@ -1,30 +1,39 @@
 import NativeRNCWebViewModule from './NativeRNCWebViewModule';
 import { Double } from 'react-native/Libraries/Types/CodegenTypes';
 
-const shouldStartLoadWithLockIdentifier = (shouldStart: boolean, lockIdentifier: Double): void => {
-    NativeRNCWebViewModule.shouldStartLoadWithLockIdentifier(
-        shouldStart,
-        lockIdentifier
-      );
-}
+const shouldStartLoadWithLockIdentifier = (
+  shouldStart: boolean,
+  lockIdentifier: Double
+): void => {
+  NativeRNCWebViewModule.shouldStartLoadWithLockIdentifier(
+    shouldStart,
+    lockIdentifier
+  );
+};
 
 const isFileUploadSupported = (): Promise<boolean> => {
-    return NativeRNCWebViewModule.isFileUploadSupported();
-}
+  return NativeRNCWebViewModule.isFileUploadSupported();
+};
 
 const getCustomCertificateKeychainAlias = (): string | null => {
-    return NativeRNCWebViewModule.getCustomCertificateKeychainAlias() ;
-}
+  if (NativeRNCWebViewModule?.getCustomCertificateKeychainAlias == null) {
+    return null;
+  }
+  return NativeRNCWebViewModule.getCustomCertificateKeychainAlias();
+};
 
 const setCustomCertificateKeychainAlias = (alias: string) => {
-    NativeRNCWebViewModule.setCustomCertificateKeychainAlias(alias);
-}
+  if (NativeRNCWebViewModule?.setCustomCertificateKeychainAlias == null) {
+    return;
+  }
+  NativeRNCWebViewModule.setCustomCertificateKeychainAlias(alias);
+};
 
 const WebViewModule = {
-    shouldStartLoadWithLockIdentifier,
-    isFileUploadSupported,
-    setCustomCertificateKeychainAlias,
-    getCustomCertificateKeychainAlias,
-}
+  shouldStartLoadWithLockIdentifier,
+  isFileUploadSupported,
+  setCustomCertificateKeychainAlias,
+  getCustomCertificateKeychainAlias,
+};
 
-export default WebViewModule
+export default WebViewModule;

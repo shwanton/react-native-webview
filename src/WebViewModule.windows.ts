@@ -1,5 +1,5 @@
 // not supported on windows
-const shouldStartLoadWithLockIdentifier = (): void => {}
+const shouldStartLoadWithLockIdentifier = (): void => {};
 
 // not supported on windows
 const isFileUploadSupported: () => Promise<boolean> = async () => false;
@@ -9,10 +9,10 @@ const setCustomCertificateKeychainAlias = () => {};
 const getCustomCertificateKeychainAlias = () => null;
 
 const WebViewModule = {
-    shouldStartLoadWithLockIdentifier,
-    isFileUploadSupported,
-    setCustomCertificateKeychainAlias,
-    getCustomCertificateKeychainAlias,
-}
+  shouldStartLoadWithLockIdentifier,
+  isFileUploadSupported,
+  setCustomCertificateKeychainAlias,
+  getCustomCertificateKeychainAlias,
+};
 
-export default WebViewModule
+export default WebViewModule;

@@ -276,7 +276,13 @@ const WebView = forwardRef<{}, AndroidWebViewProps>(
           )
         : sourceResolved;
 
-    const alias = WebViewModule.getCustomCertificateKeychainAlias();
+    const alias = React.useMemo(() => {
+      if (WebViewModule.getCustomCertificateKeychainAlias == null) {
+        return null;
+      }
+
+      return WebViewModule.getCustomCertificateKeychainAlias();
+    }, []);
 
     const webView = (
       <NativeWebView

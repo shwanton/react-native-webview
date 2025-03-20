@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 
 import type NativeWebViewComponent from './RNCWebViewNativeComponent';
-import type NativeRNCWebViewModule from './NativeRNCWebViewModule';
 
 type WebViewCommands =
   | 'goForward'
@@ -1146,6 +1145,15 @@ export interface AndroidWebViewProps extends WebViewSharedProps {
    * @platform android
    */
   allowsProtectedMedia?: boolean;
+
+  /**
+   * Custom Certificate Keychain alias string
+   * This is used by the webview client to use custom certificates from Keychain
+   * Passing a struing will cause an override of `onReceivedClientCertRequest`
+   * Default is null.
+   * @platform android
+   */
+  customCertificateKeychainAlias?: string | null;
 }
 
 export interface WebViewSharedProps extends ViewProps {

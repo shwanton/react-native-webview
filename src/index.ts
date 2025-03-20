@@ -1,5 +1,7 @@
 import WebView from './WebView';
 import WebViewModule from './WebViewModule';
 
-export { WebView, WebViewModule };
+const { setCustomCertificateKeychainAlias } = WebViewModule;
+
+export { WebView, setCustomCertificateKeychainAlias };
 export default WebView;
