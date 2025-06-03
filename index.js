@@ -1,5 +1,5 @@
 import WebView from './lib/WebView';
-import WebViewModule from '.lib/WebViewModule'
+import WebViewModule from './lib/WebViewModule'
 
 const {
   isFileUploadSupported,
