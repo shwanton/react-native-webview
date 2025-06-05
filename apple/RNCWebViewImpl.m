@@ -865,13 +865,13 @@ RCTAutoInsetsProtocol>
       [webView loadHTMLString:@"" baseURL:nil];
       return;
     }
-    if (request.URL.host) {
-      [webView loadRequest:request];
-    }
-    else {
+    if ([request.URL.scheme isEqualToString:@"file"]) {
       NSURL* readAccessUrl = allowingReadAccessToURL ? [RCTConvert NSURL:allowingReadAccessToURL] : request.URL;
       [webView loadFileURL:request.URL allowingReadAccessToURL:readAccessUrl];
+      return;
     }
+     
+    [webView loadRequest:request];
   }];
 }
 
